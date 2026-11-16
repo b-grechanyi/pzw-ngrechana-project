@@ -1,0 +1,17 @@
+# Configuration with secrets remains on the computer; in the repository is .env.example
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Editori i OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
