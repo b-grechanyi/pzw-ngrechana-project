@@ -21,4 +21,4 @@ class User(Base):
 
     rentals: Mapped[list["Rental"]] = relationship(back_populates="user")
     
-    __table_args__ = (CheckConstraint("role IN ('admin', 'user')", name="ck_user_role"))
+    __table_args__ = (CheckConstraint("role IN ('admin', 'user')", name="ck_user_role"),)
