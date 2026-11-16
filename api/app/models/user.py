@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING
 from sqlalchemy import String, Boolean
 from app.core.database import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import CheckConstraint
+
+
+if TYPE_CHECKING:
+    from .rental import Rental
 
 class User(Base):
     __tablename__ = "users"
