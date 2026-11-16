@@ -1,0 +1,26 @@
+# Web framework i poslužitelj
+fastapi>=0.115
+uvicorn[standard]>=0.34
+
+# Configuration from environment variables
+pydantic-settings>=2.7
+
+# Base: ORM, asynchronous driver for PostgreSQL and migrations
+sqlalchemy[asyncio]>=2.0
+asyncpg>=0.30
+alembic>=1.14
+
+# Password hashing and JWT tokens
+bcrypt>=4.2
+pyjwt>=2.10
+
+# Static analysis and formatting
+ruff>=0.9
+
+# Tests: pytest, async tests, HTTP client over serverless application
+pytest>=8.3
+pytest-asyncio>=0.25
+httpx>=0.28
+
+# Freeze time for deadline-dependent rules
+freezegun>=1.5
