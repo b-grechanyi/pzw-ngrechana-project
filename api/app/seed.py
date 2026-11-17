@@ -96,8 +96,8 @@ async def seed() -> None:
             demo_books = (
                 ("The Hobbit", "J. R. R. Tolkien", "9780547928227"),
                 ("Pride and Prejudice", "Jane Austen", "9780141439518"),
-                ("The Little Prince", "Antoine de Saint-Exupéry", "9780156012195"),
-                ("Kobzar", "Taras Shevchenko","9682156010123")
+                ("The Little Prince", "Antoine de Saint-Exupery", "9780156012195"),
+                ("Kobzar", "Taras Shevchenko", "9789664291924")
             )
             for title, author, isbn in demo_books:
                 books_created += await add_book_if_missing(
