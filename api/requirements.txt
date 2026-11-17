@@ -4,6 +4,7 @@ uvicorn[standard]>=0.34
 
 # Configuration from environment variables
 pydantic-settings>=2.7
+email-validator>=2.2
 
 # Base: ORM, asynchronous driver for PostgreSQL and migrations
 sqlalchemy[asyncio]>=2.0
