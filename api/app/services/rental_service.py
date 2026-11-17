@@ -69,7 +69,9 @@ async def rent_book(
 
 
 async def return_rental(db: AsyncSession, actor: User, rental_id: int) -> Rental:
-    rental = await rental_repo.get_by_id(db, rental_id, for_update=True)
+    # Read first to find the book, then acquire locks in the same book-first
+    # order as rent_book. Re-read the rental under lock before changing state.
+    rental = await rental_repo.get_by_id(db, rental_id)
     if rental is None:
         raise AppError("not_found", "Rental not found", 404)
     if actor.role != "admin" and rental.user_id != actor.id:
@@ -80,6 +82,14 @@ async def return_rental(db: AsyncSession, actor: User, rental_id: int) -> Rental
     book = await book_repo.get_by_id(db, rental.book_id, for_update=True)
     if book is None:
         raise AppError("not_found", "Book not found", 404)
+
+    rental = await rental_repo.get_by_id(db, rental_id, for_update=True)
+    if rental is None:
+        raise AppError("not_found", "Rental not found", 404)
+    if actor.role != "admin" and rental.user_id != actor.id:
+        raise AppError("forbidden", "You cannot return this rental", 403)
+    if rental.status != "active":
+        raise AppError("already_returned", "This rental has already been returned", 409)
 
     rental.status = "returned"
     book.is_available = True

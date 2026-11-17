@@ -38,3 +38,23 @@ async def test_user_cannot_return_another_users_rental(
 
     assert response.status_code == 403
     assert response.json()["code"] == "forbidden"
+
+
+@pytest.mark.asyncio
+async def test_returning_rental_makes_book_available(
+    client, rental_fixture, auth_header
+):
+    headers = await auth_header("owner@example.com", "owner-pass")
+
+    response = await client.post(
+        f"/rentals/{rental_fixture.id}/return", headers=headers
+    )
+
+    assert response.status_code == 200
+    assert response.json()["status"] == "returned"
+
+    book_response = await client.get(
+        f"/books/{rental_fixture.book_id}", headers=headers
+    )
+    assert book_response.status_code == 200
+    assert book_response.json()["is_available"] is True
