@@ -2,7 +2,7 @@ from collections.abc import AsyncGenerator, Callable
 
 import jwt
 from fastapi import Depends
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import AsyncSessionLocal
 from app.core.error_handling import AppError
@@ -10,7 +10,7 @@ from app.core.jwt import decode_token
 from app.models.user import User
 from app.repositories.user_repo import get_by_id
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+bearer_scheme = HTTPBearer()
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
@@ -22,7 +22,11 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
             await session.rollback()
             raise
 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db),) -> User:
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+    db: AsyncSession = Depends(get_db),
+) -> User:
+    token = credentials.credentials
     try:
         payload = decode_token(token)
     except jwt.ExpiredSignatureError as exc:
