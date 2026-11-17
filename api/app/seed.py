@@ -16,7 +16,7 @@ from app.repositories.user_repo import get_by_email
 class SeedSettings(BaseSettings):
     """Optional seed overrides, read from the root .env file."""
 
-    model_config = SettingsConfigDict(env_file="../.env")
+    model_config = SettingsConfigDict(env_file="../.env", extra="ignore")
 
     SEED_ADMIN_EMAIL: str = "admin@example.com"
     SEED_ADMIN_PASSWORD: str = "demo-admin-password"
