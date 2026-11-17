@@ -1,6 +1,7 @@
 # Library API
+## by Nadiia Grechana
 
-A small library backend built with FastAPI, SQLAlchemy, Alembic, and PostgreSQL.
+A small library backend built with FastAPI, SQLAlchemy, Alembic, and PostgreSQL. Built as a first part of the project for subject "Programiranje za Web" at University of Zadar.
 
 ## Requirements
 
