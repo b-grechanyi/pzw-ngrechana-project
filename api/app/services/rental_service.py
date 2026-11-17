@@ -9,6 +9,7 @@ from app.models.user import User
 from app.repositories import book_repo, rental_repo
 
 DEFAULT_RENTAL_DAYS = 21
+MAX_ACTIVE_RENTALS = 5
 
 
 async def list_rentals(
@@ -47,6 +48,13 @@ async def rent_book(
         raise AppError("not_found", "Book not found", 404)
     if not book.is_available or await rental_repo.has_active_for_book(db, book.id):
         raise AppError("book_unavailable", "This book is already rented", 409)
+    active_rentals = await rental_repo.count_active_for_user(db, actor.id)
+    if active_rentals >= MAX_ACTIVE_RENTALS:
+        raise AppError(
+            "rental_limit_reached",
+            f"You cannot have more than {MAX_ACTIVE_RENTALS} active rentals",
+            409,
+        )
 
     rented_at = datetime.now(timezone.utc)
     rental = Rental(

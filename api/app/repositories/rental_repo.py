@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.rental import Rental
@@ -43,6 +43,15 @@ async def has_active_for_book(db: AsyncSession, book_id: int) -> bool:
         .limit(1)
     )
     return result.scalar_one_or_none() is not None
+
+
+async def count_active_for_user(db: AsyncSession, user_id: int) -> int:
+    result = await db.execute(
+        select(func.count())
+        .select_from(Rental)
+        .where(Rental.user_id == user_id, Rental.status == "active")
+    )
+    return result.scalar_one()
 
 
 async def create(db: AsyncSession, rental: Rental) -> Rental:
