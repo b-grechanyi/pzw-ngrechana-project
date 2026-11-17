@@ -1,6 +1,6 @@
-from fastapi import apirouter
+from fastapi import APIrouter
 
-router = apirouter
+router = APIrouter()
 
 @router.get("/")
 def health():
