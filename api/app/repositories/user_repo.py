@@ -12,3 +12,8 @@ async def get_by_email(db: AsyncSession, email: str) -> User | None:
 async def get_by_id(db: AsyncSession, user_id: int) -> User | None:
     result = await db.execute(select(User).where(User.id == user_id))
     return result.scalar_one_or_none()
+
+
+async def get_all(db: AsyncSession) -> list[User]:
+    result = await db.execute(select(User).order_by(User.id))
+    return list(result.scalars().all())

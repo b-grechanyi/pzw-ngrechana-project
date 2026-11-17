@@ -1,4 +1,5 @@
-from collections.abc import AsyncGenerator
+from collections.abc import AsyncGenerator, Callable
+
 import jwt
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
@@ -42,3 +43,17 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession
         raise AppError("invalid_credentials", "Invalid credentials", 401)
 
     return user
+
+
+def require_role(required_role: str) -> Callable:
+    """Build a dependency that allows only users with the given role."""
+
+    async def role_checker(user: User = Depends(get_current_user)) -> User:
+        if user.role != required_role:
+            raise AppError("forbidden", "Insufficient permissions", 403)
+        return user
+
+    return role_checker
+
+
+require_admin = require_role("admin")
