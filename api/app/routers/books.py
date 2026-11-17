@@ -15,7 +15,7 @@ from app.services.book_service import (
 router = APIRouter()
 
 
-@router.get("/", response_model=list[BookResponse])
+@router.get("/", response_model=list[BookResponse], summary="List books")
 async def list_books_route(
     _current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
@@ -25,7 +25,7 @@ async def list_books_route(
     return await list_books(db, limit=limit, offset=offset)
 
 
-@router.get("/{book_id}", response_model=BookResponse)
+@router.get("/{book_id}", response_model=BookResponse, summary="Get book")
 async def get_book_route(
     book_id: int = Path(ge=1),
     _current_user: User = Depends(get_current_user),
@@ -35,7 +35,10 @@ async def get_book_route(
 
 
 @router.post(
-    "/", response_model=BookResponse, status_code=status.HTTP_201_CREATED
+    "/",
+    response_model=BookResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create book",
 )
 async def create_book_route(
     body: BookCreate,
@@ -45,7 +48,7 @@ async def create_book_route(
     return await create_book(db, admin, body)
 
 
-@router.patch("/{book_id}", response_model=BookResponse)
+@router.patch("/{book_id}", response_model=BookResponse, summary="Update book")
 async def update_book_route(
     body: BookUpdate,
     book_id: int = Path(ge=1),
@@ -55,7 +58,11 @@ async def update_book_route(
     return await update_book(db, admin, book_id, body)
 
 
-@router.delete("/{book_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{book_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete book",
+)
 async def delete_book_route(
     book_id: int = Path(ge=1),
     admin: User = Depends(require_admin),

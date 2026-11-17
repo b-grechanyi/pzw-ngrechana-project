@@ -14,7 +14,7 @@ from app.services.rental_service import (
 router = APIRouter()
 
 
-@router.get("/", response_model=list[RentalResponse])
+@router.get("/", response_model=list[RentalResponse], summary="List rentals")
 async def list_rentals_route(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
@@ -27,7 +27,10 @@ async def list_rentals_route(
 
 
 @router.post(
-    "/", response_model=RentalResponse, status_code=status.HTTP_201_CREATED
+    "/",
+    response_model=RentalResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Rent a book",
 )
 async def rent_book_route(
     body: RentalCreate,
@@ -37,7 +40,9 @@ async def rent_book_route(
     return await rent_book(db, current_user, body.book_id)
 
 
-@router.get("/{rental_id}", response_model=RentalResponse)
+@router.get(
+    "/{rental_id}", response_model=RentalResponse, summary="Get rental"
+)
 async def get_rental_route(
     rental_id: int = Path(ge=1),
     current_user: User = Depends(get_current_user),
@@ -46,7 +51,11 @@ async def get_rental_route(
     return await get_rental(db, current_user, rental_id)
 
 
-@router.post("/{rental_id}/return", response_model=RentalResponse)
+@router.post(
+    "/{rental_id}/return",
+    response_model=RentalResponse,
+    summary="Return book",
+)
 async def return_rental_route(
     rental_id: int = Path(ge=1),
     current_user: User = Depends(get_current_user),

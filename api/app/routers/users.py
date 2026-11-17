@@ -14,7 +14,7 @@ AdminUser = Annotated[User, Depends(require_admin)]
 DatabaseSession = Annotated[AsyncSession, Depends(get_db)]
 
 
-@router.get("/", response_model=list[UserResponse])
+@router.get("/", response_model=list[UserResponse], summary="List users")
 async def list_users(
     _admin: AdminUser,
     db: DatabaseSession,
@@ -22,7 +22,12 @@ async def list_users(
     return await get_all(db)
 
 
-@router.post("/", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/",
+    response_model=UserResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create user",
+)
 async def create_user_route(
     body: UserCreate,
     admin: AdminUser,
@@ -31,7 +36,7 @@ async def create_user_route(
     return await create_user(db, admin, body)
 
 
-@router.patch("/{user_id}", response_model=UserResponse)
+@router.patch("/{user_id}", response_model=UserResponse, summary="Update user")
 async def update_user_route(
     body: UserUpdate,
     user_id: Annotated[int, Path(ge=1)],
@@ -41,7 +46,11 @@ async def update_user_route(
     return await update_user(db, admin, user_id, body)
 
 
-@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{user_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete user",
+)
 async def delete_user_route(
     user_id: Annotated[int, Path(ge=1)],
     admin: AdminUser,
