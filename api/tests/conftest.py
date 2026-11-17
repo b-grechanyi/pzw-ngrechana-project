@@ -111,6 +111,11 @@ async def other_user():
 
 
 @pytest_asyncio.fixture
+async def admin_user():
+    return await _create_user("admin@example.com", "admin-pass", role="admin")
+
+
+@pytest_asyncio.fixture
 async def available_book():
     async with TestSession() as session:
         book = Book(
